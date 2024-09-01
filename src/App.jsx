@@ -7,8 +7,8 @@ import EditForm from "./components/EditForm";
 
 function App() {
   const [tasks, setTasks] = useState([]);
-
   const [editedTask, setEditedTask] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   const addTask = (task) => {
     setTasks((prevState) => [...prevState, task]);
@@ -30,18 +30,27 @@ function App() {
     // close edit mode
   };
 
+  const enterEditMode = (task) => {
+    setEditedTask(task);
+    setIsEditing(true);
+    // set focus back to original
+  };
+
   return (
     <div className="container">
       <header>
         <h1>My Task List</h1>
       </header>
-      <EditForm editedTask={editedTask} updateTask={updateTask} />
+      {isEditing && (
+        <EditForm editedTask={editedTask} updateTask={updateTask} />
+      )}
       <CustomForm addTask={addTask} />
       {tasks && (
         <TaskList
           tasks={tasks}
           deleteTask={deleteTask}
           toggleTask={toggleTask}
+          enterEditMode={enterEditMode}
         />
       )}
     </div>
