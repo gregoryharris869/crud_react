@@ -1,21 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // icons
 import { CheckIcon } from "@heroicons/react/24/solid";
 
-const EditForm = ({ editedTask, updateTask }) => {
+const EditForm = ({ editedTask, updateTask, closeEditMode }) => {
   const [updatedTaskName, setUpdatedTaskName] = useState(editedTask.name);
+
+  useEffect(() => {
+    const closeModalEscaped = (e) => {
+      e.key === "Escape" && closeEditMode();
+    };
+    window.addEventListener("keydown", closeModalEscaped);
+    return () => window.removeEventListener("keydown", closeModalEscaped);
+  }, [closeEditMode]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    // updateTask()
+    updateTask({ ...editedTask, name: updatedTaskName });
   };
 
   return (
     <div
       role="dialog"
       aria-labelledby="editTask"
-      //  onClick={}
+      onClick={(e) => {
+        e.target === e.currentTarget && closeEditMode();
+      }}
     >
       <form className="todo" onSubmit={handleFormSubmit}>
         <div className="wrapper">
